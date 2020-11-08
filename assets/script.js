@@ -8,7 +8,12 @@ var quizAnswer3 = document.getElementById("button3");
 var quizAnswer4 = document.getElementById("button4");
 var questionNumber = 0;
 var timerEl = document.getElementById("timer");
-var timeLeft = 60;
+var timeLeft = 10;
+var initialPageEl = document.getElementById("initials-page");
+var highScorePageEl = document.getElementById("high-scores")
+var submitButtonEl = document.getElementById("submit-btn");
+var goBackButtonEl = document.getElementById("go-back")
+var clearHSButtonEl = document.getElementById("clear-hs")
 
 
 // the array of questions for the game 
@@ -65,11 +70,15 @@ var timerScore = function() {
  
         else {
             clearInterval(timeInterval);
-            // call high score page
+            pageRedirect();
         }
 
     }, 1000);
 }    
+
+var pageRedirect = function () {
+    window.location.href = "./high-score.html"
+};
 
 var answerHandler = function (event) {
 
@@ -90,7 +99,10 @@ var answerHandler = function (event) {
         loadQuestions(questionNumber);
     }
     else {
-        alert("Done")
+        alert("Done");
+        pageRedirect();
+        
+
     }
 }
 
@@ -109,7 +121,11 @@ var loadQuestions = function(index) {
     quizAnswer4.textContent = quizArray[index].choices[3];
 }
 
+var submitInitials = function() {
+    initialPageEl.classList.add('hide');
+    // local storage
 
+}
 
 startButtonEl.addEventListener("click", function() {
     introPageEl.classList.add('hide');
@@ -121,4 +137,5 @@ quizAnswer1.addEventListener("click", answerHandler);
 quizAnswer2.addEventListener("click", answerHandler);
 quizAnswer3.addEventListener("click", answerHandler);
 quizAnswer4.addEventListener("click", answerHandler);
+submitButtonEl.addEventListener("click", submitInitials);
 
