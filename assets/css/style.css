@@ -5,3 +5,8 @@
 .hide {
 	display: none;
 }
+
+.timer {
+	display: flex;
+	justify-content: flex-end;
+}

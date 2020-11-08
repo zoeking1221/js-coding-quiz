@@ -7,6 +7,8 @@ var quizAnswer2 = document.getElementById("button2");
 var quizAnswer3 = document.getElementById("button3");
 var quizAnswer4 = document.getElementById("button4");
 var questionNumber = 0;
+var timerEl = document.getElementById("timer");
+var timeLeft = 60;
 
 
 // the array of questions for the game 
@@ -54,7 +56,20 @@ var quizArray = [
 ]
 
 
-    
+var timerScore = function() {
+    var timeInterval = setInterval(function() {
+        if (timeLeft >= 0) {
+            timerEl.textContent = "Time: " + timeLeft;
+            timeLeft--;
+        }
+ 
+        else {
+            clearInterval(timeInterval);
+            // call high score page
+        }
+
+    }, 1000);
+}    
 
 var answerHandler = function (event) {
 
@@ -67,6 +82,7 @@ var answerHandler = function (event) {
     }
     else {
         alert("Incorrect!");
+        timeLeft = timeLeft - 10;
     }
 
     if (questionNumber < quizArray.length - 1) {
@@ -82,7 +98,7 @@ var answerHandler = function (event) {
 var takeQuiz = function() {
     quizContainerEl.classList.remove('hide');
     loadQuestions(questionNumber);
-    
+    timerScore();
 }
 
 var loadQuestions = function(index) {
@@ -92,6 +108,8 @@ var loadQuestions = function(index) {
     quizAnswer3.textContent = quizArray[index].choices[2];
     quizAnswer4.textContent = quizArray[index].choices[3];
 }
+
+
 
 startButtonEl.addEventListener("click", function() {
     introPageEl.classList.add('hide');
