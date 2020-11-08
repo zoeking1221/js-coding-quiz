@@ -6,6 +6,7 @@ var quizAnswer1 = document.getElementById("button1");
 var quizAnswer2 = document.getElementById("button2");
 var quizAnswer3 = document.getElementById("button3");
 var quizAnswer4 = document.getElementById("button4");
+var questionNumber = 0;
 
 
 // the array of questions for the game 
@@ -58,46 +59,48 @@ var quizArray = [
 var answerHandler = function (event) {
 
     var buttonAnswer = event.target.textContent;
-    var arrayAnswer = quizArray[index].answer;
+    var arrayAnswer = quizArray[questionNumber].answer;
 
-    var answerAlert = function () {
+
     if (buttonAnswer ===  arrayAnswer) {
         alert("Correct!");
     }
     else {
         alert("Incorrect!");
-    };
-    };
+    }
 
-    answerAlert();
-
-    index++
+    if (questionNumber < quizArray.length - 1) {
+        questionNumber++;
+        loadQuestions(questionNumber);
+    }
+    else {
+        alert("Done")
+    }
 }
 
 
 var takeQuiz = function() {
     quizContainerEl.classList.remove('hide');
-
-    for (var i = 0; i < quizArray.length; i++) {
-    quizQuestionEl.textContent = quizArray[i].title;
-    quizAnswer1.textContent = quizArray[i].choices[0];
-    quizAnswer2.textContent = quizArray[i].choices[1];
-    quizAnswer3.textContent = quizArray[i].choices[2];
-    quizAnswer4.textContent = quizArray[i].choices[3];
-    answerHandler();
-   
-    };
+    loadQuestions(questionNumber);
+    
 }
 
-
+var loadQuestions = function(index) {
+    quizQuestionEl.textContent = quizArray[index].title;
+    quizAnswer1.textContent = quizArray[index].choices[0];
+    quizAnswer2.textContent = quizArray[index].choices[1];
+    quizAnswer3.textContent = quizArray[index].choices[2];
+    quizAnswer4.textContent = quizArray[index].choices[3];
+}
 
 startButtonEl.addEventListener("click", function() {
     introPageEl.classList.add('hide');
     takeQuiz(); 
 });
 
-    quizAnswer1.addEventListener("click", answerHandler);
-    quizAnswer2.addEventListener("click", answerHandler);
-    quizAnswer3.addEventListener("click", answerHandler);
-    quizAnswer4.addEventListener("click", answerHandler);
+
+quizAnswer1.addEventListener("click", answerHandler);
+quizAnswer2.addEventListener("click", answerHandler);
+quizAnswer3.addEventListener("click", answerHandler);
+quizAnswer4.addEventListener("click", answerHandler);
 
