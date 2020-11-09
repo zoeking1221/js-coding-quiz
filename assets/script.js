@@ -8,12 +8,16 @@ var quizAnswer3 = document.getElementById("button3");
 var quizAnswer4 = document.getElementById("button4");
 var questionNumber = 0;
 var timerEl = document.getElementById("timer");
-var timeLeft = 10;
+var timeLeft = 60;
 var initialPageEl = document.getElementById("initials-page");
+var initialTextEl = document.getElementById("initials-text");
 var highScorePageEl = document.getElementById("high-scores")
 var submitButtonEl = document.getElementById("submit-btn");
 var goBackButtonEl = document.getElementById("go-back")
 var clearHSButtonEl = document.getElementById("clear-hs")
+var score;
+var timeInterval;
+var initialForm = document.getElementById("initials-input")
 
 
 // the array of questions for the game 
@@ -60,26 +64,66 @@ var quizArray = [
      }
 ]
 
-
+// function for timer/score
 var timerScore = function() {
-    var timeInterval = setInterval(function() {
+    timeInterval = setInterval(function() {
         if (timeLeft >= 0) {
             timerEl.textContent = "Time: " + timeLeft;
             timeLeft--;
         }
  
+        else if (timeLeft < 0) {
+            timeLeft = 0;
+            quizContainerEl.classList.add('hide');
+            initialPageEl.classList.remove('hide');
+            score = 0;
+            initialTextEl.textContent = "Your final score is " + score + "."
+        }
         else {
             clearInterval(timeInterval);
-            pageRedirect();
+            quizContainerEl.classList.add('hide');
+            initialPageEl.classList.remove('hide');
+            score = 0;
+            initialTextEl.textContent = "Your final score is " + score + "."
         }
-
     }, 1000);
-}    
+}   
 
+
+// function for when user clicks 'submit' after entering initials
+var submitHandler = function (event) {
+    event.preventDefault();
+    var initials = initialForm.value;
+    if (!initialForm.value) {
+        window.alert("Please enter your initials!");
+    }
+
+    else {
+        var userScore = {
+            initials: initials,  
+            score: score
+         }
+         if (localStorage !=="undefined") {
+             var firstScoreArray = [];
+             firstScoreArray.push(userScore);
+             localStorage.setItem('initials and score', JSON.stringify(firstScoreArray));
+         }
+         else {
+             var subScoreArray = [] ;
+             subScoreArray.push(userScore);
+             var highScoresArray = firstScoreArray.concat(subScoreArray);
+             localStorage.setItem ('initials and score', JSON.stringify(highScoresArray));
+         }
+    pageRedirect();
+    }
+};
+
+// function to take user to high score page
 var pageRedirect = function () {
     window.location.href = "./high-score.html"
 };
 
+// function to determine whether answer was correct and alert user, deduct time if incorrect
 var answerHandler = function (event) {
 
     var buttonAnswer = event.target.textContent;
@@ -99,43 +143,53 @@ var answerHandler = function (event) {
         loadQuestions(questionNumber);
     }
     else {
-        alert("Done");
-        pageRedirect();
-        
-
+        quizContainerEl.classList.add('hide');
+        initialPageEl.classList.remove('hide');
+        score = timeLeft + 1;
+        clearInterval(timeInterval);
+        initialTextEl.textContent = "Your final score is " + score + "."
     }
 }
 
-
+// function to begin quiz and timer when user clicks start button
 var takeQuiz = function() {
     quizContainerEl.classList.remove('hide');
     loadQuestions(questionNumber);
     timerScore();
 }
 
+// function to load questions into grid
 var loadQuestions = function(index) {
     quizQuestionEl.textContent = quizArray[index].title;
     quizAnswer1.textContent = quizArray[index].choices[0];
     quizAnswer2.textContent = quizArray[index].choices[1];
     quizAnswer3.textContent = quizArray[index].choices[2];
     quizAnswer4.textContent = quizArray[index].choices[3];
-}
+};
 
-var submitInitials = function() {
-    initialPageEl.classList.add('hide');
-    // local storage
 
-}
-
+// function to go to quiz if user clicks on start button
+if (startButtonEl) {
 startButtonEl.addEventListener("click", function() {
     introPageEl.classList.add('hide');
     takeQuiz(); 
 });
+}
 
+var startOver = function () {
+    window.location.href = "./index.html"
+}
 
+// event listeners 
+if (quizAnswer1) {
 quizAnswer1.addEventListener("click", answerHandler);
 quizAnswer2.addEventListener("click", answerHandler);
 quizAnswer3.addEventListener("click", answerHandler);
 quizAnswer4.addEventListener("click", answerHandler);
-submitButtonEl.addEventListener("click", submitInitials);
-
+};
+if (submitButtonEl) {
+submitButtonEl.addEventListener("click", submitHandler);
+}
+if (goBackButtonEl) {
+goBackButtonEl.addEventListener("click", startOver);
+}

@@ -1,5 +1,5 @@
-.page-title {
-	color: lightblue;
+* {
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .hide {
@@ -9,4 +9,15 @@
 .timer {
 	display: flex;
 	justify-content: flex-end;
+}
+
+.btn,
+.start-btn,
+.submit-btn,
+.go-back,
+.clear-hs {
+	background-color: rgb(55, 0, 128);
+	color: white;
+	font-size: 15px;
+	border-radius: 4px;
 }
